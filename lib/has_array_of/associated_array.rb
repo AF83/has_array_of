@@ -30,8 +30,7 @@ module HasArrayOf::AssociatedArray
               else
                 [first, *rest]
               end
-        # "ARRAY[#{ary.map(&try_pkey_proc).join(',')}]::#{pkey_attribute_sql_type}[]"
-        "ARRAY[#{ary.map(&try_pkey_proc).join(',')}]"
+        "ARRAY[#{ary.map(&try_pkey_proc).join(',')}]::#{owner_model.columns_hash[ids_attribute.to_s].sql_type}[]"
       end
 
       define_singleton_method "with_#{name}_containing" do |*args|

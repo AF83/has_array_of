@@ -31,11 +31,11 @@ RSpec.describe HasArrayOf::AssociatedArray::Relation do
       expect(two_food_chains_and_pony.videos.map(&:id)).to eq(two_food_chains_and_pony_video_ids)
     end
 
-    it "should correctly deal with nil" do
+    it "should remove nils" do
       playlist = Playlist.create video_ids: [nil, something_big.id, nil]
-      expect(playlist.videos).to eq([nil, something_big, nil])
+      expect(playlist.videos).to eq([something_big])
       playlist = Playlist.create video_ids: [nil, nil, nil]
-      expect(playlist.videos).to eq([nil, nil, nil])
+      expect(playlist.videos).to eq([])
     end
 
     describe "when chaining with other queries" do
@@ -252,9 +252,9 @@ RSpec.describe HasArrayOf::AssociatedArray::Relation do
       expect(my_cool_list.videos).to respond_to(:compact!)
     end
 
-    it "should contain nil" do
-      expect(my_cool_list.videos).to include(nil)
-      expect(my_cool_list.videos.length).to eq(3)
+    it "should not contain nil" do
+      expect(my_cool_list.videos).to_not include(nil)
+      expect(my_cool_list.videos.length).to eq(2)
     end
 
     it "should reflect changes" do

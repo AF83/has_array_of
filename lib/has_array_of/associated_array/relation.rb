@@ -290,7 +290,7 @@ module HasArrayOf
     end
 
     def size
-      ids ? ids.size : 0
+      relation.load.count
     end
     alias_method :length, :size
 
