@@ -82,7 +82,8 @@ module HasArrayOf
 
     def mutate_ids
       relation.reset
-      where_values.reject! { |v| v == query }
+      predicates = where_clause.send(:predicates).reject { |v| v == query }
+      self.where_clause = ActiveRecord::Relation::WhereClause.new(predicates)
       ret = yield
       self.ids = ids
       build_query!

@@ -26,8 +26,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'railties', '>= 5.0'
 
   s.add_development_dependency 'bundler', '~> 1.7'
-  s.add_development_dependency 'rake', '~> 10.0'
-  s.add_development_dependency 'rspec', '~> 3.2.0'
-  s.add_development_dependency 'database_cleaner', '~> 1.4.0'
-  s.add_development_dependency 'with_model', '~> 1.2.1'
+  s.add_development_dependency 'rake', '~> 12.3'
+  s.add_development_dependency 'rspec', '~> 3.8.0'
+  s.add_development_dependency 'database_cleaner', '~> 1.7.0'
+  s.add_development_dependency 'with_model', '~> 2.1.2'
 end
