@@ -323,8 +323,8 @@ module HasArrayOf
       end
     end
 
-    def respond_to?(method)
-      relation.respond_to?(method) || super
+    def respond_to?(method, include_all=false)
+      relation.respond_to?(method, include_all) || super
     end
 
     private
