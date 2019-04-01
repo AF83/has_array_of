@@ -22,6 +22,8 @@ module HasArrayOf
                                         model: model,
                                         pkey_attribute: pkey_attribute,
                                         extension: extension})
+      rescue ActiveRecord::NoDatabaseError
+        Rails.logger.info "[has_array_of] DB is not available yet"
       end
 
       def belongs_to_array_in_many(name, options={})
@@ -35,6 +37,8 @@ module HasArrayOf
         AssociatedBelongs.define_in self, name: name,
                                           class_name: class_name,
                                           array_name: array_name
+      rescue ActiveRecord::NoDatabaseError
+        Rails.logger.info "[has_array_of] DB is not available yet"
       end
     end
   end
