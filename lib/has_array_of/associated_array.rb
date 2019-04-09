@@ -14,7 +14,7 @@ module HasArrayOf::AssociatedArray
       define_method "#{name}=" do |objects|
         ids = if objects.blank?
                 []
-              elsif objects.respond_to? :pluck
+              elsif objects.is_a?(ActiveRecord::Relation)
                 objects.pluck(pkey_attribute)
               elsif String === objects.first || Integer === objects.first
                 objects.delete_if(&:blank?).map(&:to_i)
