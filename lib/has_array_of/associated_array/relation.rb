@@ -7,12 +7,16 @@ module HasArrayOf
       @ids_attr = ids_attr
       build_query!
       me = self
-      @relation = associated_model.where(query).extending do
-        foreign_id_for_proc = me.send :foreign_id_for_proc
-        define_method :load do
-          super()
-          @records = @records.index_by(&foreign_id_for_proc).values_at(*me.ids).compact
+      if query
+        @relation = associated_model.where(query).extending do
+          foreign_id_for_proc = me.send :foreign_id_for_proc
+          define_method :load do
+            super()
+            @records = @records.index_by(&foreign_id_for_proc).values_at(*me.ids).compact
+          end
         end
+      else
+        @relation = associated_model.none
       end
     end
 
@@ -323,7 +327,14 @@ module HasArrayOf
     end
 
     def build_query!
-      @query = associated_model.arel_table[foreign_id_attr].in((ids ? ids : []).compact)
+      @query = begin
+        _ids = ids && ids.compact
+        if _ids.present?
+          associated_model.arel_table[foreign_id_attr].in(_ids)
+        else
+          nil
+        end
+      end
     end
 
     attr_reader :owner, :ids_attr
