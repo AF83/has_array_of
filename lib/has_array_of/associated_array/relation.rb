@@ -8,18 +8,23 @@ module HasArrayOf
       @options = options
       build_query!
       me = self
-      @relation = associated_model.where(query)
-      @relation = @relation.order(order) if order.present?
-      @relation = @relation.extending do
-        foreign_id_for_proc = me.send :foreign_id_for_proc
-        if me.should_sort?
-          define_method :load do
-            super()
-            @records = @records.index_by(&foreign_id_for_proc).values_at(*me.ids).compact
-            @records = @records.sort_by(&me.sort) if me.sort
-            @records
+
+      if query
+        @relation = associated_model.where(query)
+        @relation = @relation.order(order) if order.present?
+        @relation = @relation.extending do
+          foreign_id_for_proc = me.send :foreign_id_for_proc
+          if me.should_sort?
+            define_method :load do
+              super()
+              @records = @records.index_by(&foreign_id_for_proc).values_at(*me.ids).compact
+              @records = @records.sort_by(&me.sort) if me.sort
+              @records
+            end
           end
         end
+      else
+        @relation = associated_model.none
       end
     end
 
@@ -343,7 +348,14 @@ module HasArrayOf
     end
 
     def build_query!
-      @query = associated_model.arel_table[foreign_id_attr].in((ids ? ids : []).compact)
+      @query = begin
+        _ids = ids && ids.compact
+        if _ids.present?
+          associated_model.arel_table[foreign_id_attr].in(_ids)
+        else
+          nil
+        end
+      end
     end
 
     attr_reader :owner, :ids_attr
